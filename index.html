@@ -23,41 +23,18 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background-color 0.3s, color 0.3s;
+            transition: all 0.3s ease;
         }
         body {
-            background: #f5f7fa;
+            background: var(--light);
             color: var(--dark);
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            padding-bottom: 80px;
         }
         body.dark-mode {
             background: var(--dark-bg);
-            color: #f0f0f0;
-        }
-        body.dark-mode .card,
-        body.dark-mode .transaction-form,
-        body.dark-mode .transactions,
-        body.dark-mode .chatbot-container,
-        body.dark-mode .modal-content,
-        body.dark-mode .info-modal {
-            background: var(--dark-card);
-            color: #f0f0f0;
-        }
-        body.dark-mode nav ul li a,
-        body.dark-mode .about-help button {
-            color: #f0f0f0;
-        }
-        body.dark-mode .form-group input,
-        body.dark-mode .form-group select,
-        body.dark-mode .chatbot-input input {
-            background: #2d2d2d;
-            color: #f0f0f0;
-            border-color: #444;
-        }
-        body.dark-mode .message.bot-message {
-            background: #2d2d2d;
             color: #f0f0f0;
         }
 
@@ -74,20 +51,17 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.5s ease-out;
+            transition: opacity 0.5s;
         }
         .loader {
             width: 50px;
             height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.3);
+            border: 5px solid rgba(255,255,255,0.3);
             border-radius: 50%;
             border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 20px;
+            animation: spin 1s linear infinite;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         .loading-text {
             color: white;
             font-size: 1.5rem;
@@ -95,16 +69,19 @@
             text-align: center;
         }
 
-        /* === Header & Navigation === */
+        /* === Header & Auth === */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 0;
-            margin-bottom: 30px;
+            padding: 20px;
+            margin-bottom: 10px;
             border-bottom: 1px solid #eee;
+            background: white;
+            box-shadow: var(--shadow);
         }
         body.dark-mode header {
+            background: var(--dark-card);
             border-bottom-color: #444;
         }
         .logo {
@@ -124,34 +101,38 @@
             font-size: 0.9rem;
             color: #666;
         }
-        body.dark-mode .logo-text p {
-            color: #aaa;
-        }
-        nav ul {
+        .auth-buttons {
             display: flex;
-            list-style: none;
+            gap: 10px;
         }
-        nav ul li {
-            margin-left: 20px;
-        }
-        nav ul li a {
-            text-decoration: none;
-            color: var(--dark);
+        .auth-buttons button {
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
             font-weight: 500;
-            transition: color 0.3s;
         }
-        nav ul li a:hover {
+        .login-btn {
+            background: transparent;
+            border: 1px solid var(--primary);
             color: var(--primary);
         }
-        body.dark-mode nav ul li a:hover {
-            color: var(--primary);
+        .signup-btn {
+            background: var(--primary);
+            border: 1px solid var(--primary);
+            color: white;
         }
-        .active {
-            color: var(--primary) !important;
-            font-weight: 600 !important;
+        .logout-btn {
+            background: #e74c3c;
+            border: 1px solid #e74c3c;
+            color: white;
         }
 
         /* === Dashboard === */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -163,13 +144,9 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: var(--shadow);
-            transition: transform 0.3s;
         }
         body.dark-mode .card {
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-        .card:hover {
-            transform: translateY(-5px);
+            background: var(--dark-card);
         }
         .card h3 {
             font-size: 1rem;
@@ -183,18 +160,12 @@
             font-size: 1.8rem;
             font-weight: bold;
         }
-        #balance {
-            color: var(--primary);
-        }
-        #income {
-            color: var(--income);
-        }
-        #expense {
-            color: var(--expense);
-        }
-        #savings {
-            color: var(--savings);
-        }
+        #balance { color: var(--primary); }
+        #income { color: var(--income); }
+        #expense { color: var(--expense); }
+        #savings { color: var(--savings); }
+        #healthScore { color: #f39c12; }
+
         /* === Transaction Form === */
         .transaction-form {
             background: white;
@@ -202,10 +173,32 @@
             border-radius: 10px;
             box-shadow: var(--shadow);
             margin-bottom: 30px;
+            position: relative;
+            display: none;
+        }
+        body.dark-mode .transaction-form {
+            background: var(--dark-card);
         }
         .transaction-form h3 {
             margin-bottom: 20px;
             color: var(--primary);
+        }
+        .currency-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .currency-selector select {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        body.dark-mode .currency-selector select {
+            background: #333;
+            color: white;
+            border-color: #555;
         }
         .form-row {
             display: grid;
@@ -221,7 +214,7 @@
             margin-bottom: 8px;
             font-weight: 500;
         }
-        .form-group input, 
+        .form-group input,
         .form-group select {
             width: 100%;
             padding: 10px;
@@ -229,7 +222,7 @@
             border-radius: 5px;
             font-size: 1rem;
         }
-        .form-group input:focus, 
+        .form-group input:focus,
         .form-group select:focus {
             outline: none;
             border-color: var(--primary);
@@ -261,13 +254,17 @@
             display: flex;
             gap: 10px;
         }
- 
+
         /* === Transactions List === */
         .transactions {
             background: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: var(--shadow);
+            margin-bottom: 80px;
+        }
+        body.dark-mode .transactions {
+            background: var(--dark-card);
         }
         .transactions h3 {
             margin-bottom: 20px;
@@ -314,6 +311,77 @@
             border-left: 4px solid var(--savings);
         }
 
+        /* === Search Bar === */
+        .search-bar {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            font-size: 1rem;
+            outline: none;
+        }
+        body.dark-mode .search-bar input {
+            background: var(--dark-card);
+            color: #f0f0f0;
+            border-color: #444;
+        }
+        .search-bar button {
+            border-radius: 0 5px 5px 0;
+            padding: 0 20px;
+        }
+
+        /* === Add Button === */
+        .add-button {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* === AI Card === */
+        .ai-card {
+            background: linear-gradient(135deg, #6e48aa, #9d50bb);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        /* === Receipt Scanner === */
+        .receipt-scanner {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        body.dark-mode .receipt-scanner {
+            border-color: #444;
+        }
+
         /* === Chatbot === */
         .chatbot-container {
             position: fixed;
@@ -330,6 +398,7 @@
             height: 450px;
         }
         body.dark-mode .chatbot-container {
+            background: var(--dark-card);
             box-shadow: 0 5px 15px rgba(0,0,0,0.4);
         }
         .chatbot-header {
@@ -359,6 +428,10 @@
             align-self: flex-start;
             border-bottom-left-radius: 5px;
         }
+        body.dark-mode .bot-message {
+            background: #2d2d2d;
+            color: #f0f0f0;
+        }
         .user-message {
             background: var(--primary);
             color: white;
@@ -379,6 +452,11 @@
             border: 1px solid #ddd;
             border-radius: 20px;
             outline: none;
+        }
+        body.dark-mode #chatbotInput {
+            background: #2d2d2d;
+            color: #f0f0f0;
+            border-color: #444;
         }
         #sendChatbotMessage {
             width: 40px;
@@ -409,6 +487,42 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
+        /* === Bottom Navigation === */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        body.dark-mode .bottom-nav {
+            background: var(--dark-card);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+        body.dark-mode .nav-item {
+            color: #aaa;
+        }
+        .nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        .nav-item.active {
+            color: var(--primary);
+        }
+
         /* === Login/Signup Modal === */
         .modal {
             display: none;
@@ -429,8 +543,10 @@
             width: 100%;
             max-width: 400px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
         }
         body.dark-mode .modal-content {
+            background: var(--dark-card);
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
         .modal-header {
@@ -508,28 +624,159 @@
         .auth-footer a:hover {
             text-decoration: underline;
         }
+        .auth-image {
+            width: 100%;
+            height: 150px;
+            background-image: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
 
-        /* === About & Help Sections === */
-        .about-help {
+        /* === Settings Modal === */
+        .settings-modal {
+            display: none;
             position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
         }
-        .about-help button {
-            background: none;
-            border: none;
-            color: var(--dark);
-            font-weight: 500;
-            margin-left: 15px;
+        .settings-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        body.dark-mode .settings-content {
+            background: var(--dark-card);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        body.dark-mode .settings-item {
+            border-bottom-color: #444;
+        }
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
             cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
         }
-        body.dark-mode .about-help button {
-            color: #f0f0f0;
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
         }
-        .about-help button:hover {
-            color: var(--primary);
+        input:checked + .slider {
+            background-color: var(--primary);
         }
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--primary);
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .slider.round {
+            border-radius: 34px;
+        }
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        /* === Profile Modal === */
+        .profile-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 2000;
+        }
+        body.dark-mode .profile-modal {
+            background: var(--dark-card);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .profile-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+        .profile-details {
+            margin-bottom: 20px;
+        }
+        .profile-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        body.dark-mode .profile-detail {
+            border-bottom-color: #444;
+        }
+        .profile-detail:last-child {
+            border-bottom: none;
+        }
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* === About & Help Modals === */
         .info-modal {
             display: none;
             position: fixed;
@@ -547,6 +794,7 @@
             z-index: 2000;
         }
         body.dark-mode .info-modal {
+            background: var(--dark-card);
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
         .info-modal h2 {
@@ -578,36 +826,40 @@
             color: #aaa;
         }
 
-        /* === Currency Selector === */
-        .currency-selector {
-            position: absolute;
-            top: 20px;
-            left: 20px;
+        /* === Stats Page === */
+        .stats-container {
+            display: none;
+            padding: 20px;
+        }
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+        body.dark-mode .chart-container {
+            background: var(--dark-card);
+        }
+        .chart-placeholder {
+            width: 100%;
+            height: 300px;
+            background: #f5f5f5;
+            border-radius: 5px;
             display: flex;
             align-items: center;
+            justify-content: center;
+            color: #666;
         }
-        .currency-selector i {
-            margin-right: 10px;
-            color: var(--primary);
-            font-size: 1.2rem;
-        }
-        .currency-selector select {
-            padding: 8px 12px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            background: white;
-            font-size: 0.9rem;
-        }
-        body.dark-mode .currency-selector select {
+        body.dark-mode .chart-placeholder {
             background: #2d2d2d;
-            color: #f0f0f0;
-            border-color: #444;
+            color: #aaa;
         }
 
         /* === Theme Toggle === */
         .theme-toggle {
             position: fixed;
-            bottom: 20px;
+            bottom: 100px;
             left: 20px;
             width: 60px;
             height: 60px;
@@ -630,12 +882,8 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
-            nav ul {
+            .auth-buttons {
                 margin-top: 15px;
-            }
-            nav ul li {
-                margin-left: 0;
-                margin-right: 15px;
             }
             .dashboard {
                 grid-template-columns: 1fr;
@@ -651,10 +899,6 @@
                 position: static;
                 margin-bottom: 15px;
             }
-            .about-help {
-                position: static;
-                margin-bottom: 15px;
-            }
         }
     </style>
 </head>
@@ -663,29 +907,6 @@
     <div class="loading-screen" id="loadingScreen">
         <div class="loader"></div>
         <div class="loading-text">EXPENSIFY<br><small>by The Coders</small></div>
-    </div>
-
-    <!-- Currency Selector -->
-    <div class="currency-selector">
-        <i class="fas fa-money-bill-wave"></i>
-        <select id="currencySelect">
-            <option value="USD">USD ($)</option>
-            <option value="EUR">EUR (€)</option>
-            <option value="GBP">GBP (£)</option>
-            <option value="INR">INR (₹)</option>
-            <option value="JPY">JPY (¥)</option>
-        </select>
-    </div>
-
-    <!-- Theme Toggle -->
-    <button class="theme-toggle" id="themeToggle">
-        <i class="fas fa-moon"></i>
-    </button>
-
-    <!-- About & Help Buttons -->
-    <div class="about-help">
-        <button id="aboutBtn">About</button>
-        <button id="helpBtn">Help</button>
     </div>
 
     <!-- Header -->
@@ -697,125 +918,181 @@
                 <p>by The Coders</p>
             </div>
         </div>
-        <nav>
-            <ul>
-                <li><a href="#" class="active">Dashboard</a></li>
-                <li><a href="#">Transactions</a></li>
-                <li><a href="#">Reports</a></li>
-                <li><a href="#">Settings</a></li>
-            </ul>
-        </nav>
+        <div class="auth-buttons" id="authButtons">
+            <button class="login-btn" id="loginBtn">Login</button>
+            <button class="signup-btn" id="signupBtn">Register</button>
+        </div>
+        <div class="auth-buttons" id="userSection" style="display: none;">
+            <span id="usernameDisplay" style="margin-right: 10px;"></span>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
     </header>
 
-    <!-- Main Content -->
-    <main>
-        <!-- Dashboard Cards -->
-        <div class="dashboard">
-            <div class="card">
-                <h3>Total Balance</h3>
-                <p id="balance">$2,450.00</p>
+    <!-- Main App (Hidden until login) -->
+    <div id="appContent" style="display: none;">
+        <div class="container" id="mainContainer">
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search transactions...">
+                <button id="searchBtn"><i class="fas fa-search"></i></button>
             </div>
-            <div class="card">
-                <h3>Income</h3>
-                <p id="income">$3,200.00</p>
+
+            <!-- Dashboard Cards -->
+            <div class="dashboard">
+                <div class="card">
+                    <h3>Total Balance</h3>
+                    <p id="balance">$0.00</p>
+                </div>
+                <div class="card">
+                    <h3>Income</h3>
+                    <p id="income">$0.00</p>
+                </div>
+                <div class="card">
+                    <h3>Expenses</h3>
+                    <p id="expense">$0.00</p>
+                </div>
+                <div class="card">
+                    <h3>Financial Health</h3>
+                    <p id="healthScore">-</p>
+                </div>
             </div>
-            <div class="card">
-                <h3>Expenses</h3>
-                <p id="expense">$1,850.00</p>
+
+            <!-- AI Prediction Card -->
+            <div class="ai-card">
+                <h3><i class="fas fa-robot"></i> AI Spending Prediction</h3>
+                <p id="aiPrediction">"You're on track to save $500 this month!"</p>
             </div>
-            <div class="card">
-                <h3>Savings</h3>
-                <p id="savings">$500.00</p>
+
+            <!-- Transaction Form -->
+            <div class="transaction-form" id="transactionFormContainer">
+                <h3>Add Transaction</h3>
+                <div class="currency-selector">
+                    <select id="currencySelect">
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                        <option value="INR">INR (₹)</option>
+                        <option value="JPY">JPY (¥)</option>
+                    </select>
+                </div>
+                <form id="transactionForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="transactionType">Type</label>
+                            <select id="transactionType" required>
+                                <option value="" disabled selected>Select type</option>
+                                <option value="income">Income</option>
+                                <option value="expense">Expense</option>
+                                <option value="savings">Savings</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="transactionAmount">Amount</label>
+                            <input type="number" id="transactionAmount" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="transactionCategory">Category</label>
+                            <select id="transactionCategory" required>
+                                <option value="" disabled selected>Select category</option>
+                                <option value="salary">Salary</option>
+                                <option value="freelance">Freelance</option>
+                                <option value="investment">Investment</option>
+                                <option value="food">Food</option>
+                                <option value="transport">Transport</option>
+                                <option value="housing">Housing</option>
+                                <option value="entertainment">Entertainment</option>
+                                <option value="shopping">Shopping</option>
+                                <option value="utilities">Utilities</option>
+                                <option value="health">Health</option>
+                                <option value="education">Education</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="transactionDate">Date</label>
+                            <input type="date" id="transactionDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="transactionDescription">Description</label>
+                        <input type="text" id="transactionDescription" placeholder="Enter description">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-block">Add Transaction</button>
+                        <button type="reset" class="btn-block btn-secondary">Reset</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Receipt Scanner (Mock) -->
+            <div class="receipt-scanner" id="receiptScanner">
+                <i class="fas fa-camera" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                <h3>Scan Receipt</h3>
+                <p>Click to upload a receipt photo</p>
+                <input type="file" id="receiptUpload" accept="image/*" style="display: none;">
+            </div>
+
+            <!-- Transactions List -->
+            <div class="transactions">
+                <div class="form-actions" style="margin-bottom: 15px;">
+                    <h3 style="flex-grow: 1;">Transaction History</h3>
+                    <button id="resetHistory" class="btn-secondary">Reset History</button>
+                </div>
+                <div id="transactionsList">
+                    <!-- Transactions will be added here dynamically -->
+                </div>
             </div>
         </div>
 
-        <!-- Transaction Form -->
-        <div class="transaction-form">
-            <h3>Add New Transaction</h3>
-            <form id="transactionForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="transactionType">Type</label>
-                        <select id="transactionType" required>
-                            <option value="" disabled selected>Select type</option>
-                            <option value="income">Income</option>
-                            <option value="expense">Expense</option>
-                            <option value="savings">Savings</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="transactionAmount">Amount</label>
-                        <input type="number" id="transactionAmount" placeholder="0.00" step="0.01" required>
-                    </div>
+        <!-- Stats Page -->
+        <div class="stats-container" id="statsContainer">
+            <div class="chart-container">
+                <h3>Monthly Spending</h3>
+                <div class="chart-placeholder">
+                    Monthly spending chart will be displayed here
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="transactionCategory">Category</label>
-                        <select id="transactionCategory" required>
-                            <option value="" disabled selected>Select category</option>
-                            <option value="salary">Salary</option>
-                            <option value="freelance">Freelance</option>
-                            <option value="investment">Investment</option>
-                            <option value="food">Food</option>
-                            <option value="transport">Transport</option>
-                            <option value="housing">Housing</option>
-                            <option value="entertainment">Entertainment</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="transactionDate">Date</label>
-                        <input type="date" id="transactionDate" required>
-                    </div>
+            </div>
+            <div class="chart-container">
+                <h3>Category Breakdown</h3>
+                <div class="chart-placeholder">
+                    Category breakdown chart will be displayed here
                 </div>
-                <div class="form-group">
-                    <label for="transactionDescription">Description</label>
-                    <input type="text" id="transactionDescription" placeholder="Enter description">
+            </div>
+            <div class="chart-container">
+                <h3>Savings Progress</h3>
+                <div class="chart-placeholder">
+                    Savings progress chart will be displayed here
                 </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn-block">Add Transaction</button>
-                    <button type="reset" class="btn-block btn-secondary">Reset</button>
-                </div>
-            </form>
+            </div>
         </div>
+    </div>
 
-        <!-- Transactions List -->
-        <div class="transactions">
-            <div class="form-actions" style="margin-bottom: 15px;">
-                <h3 style="flex-grow: 1;">Transaction History</h3>
-                <button id="resetHistory" class="btn-secondary">Reset History</button>
-            </div>
-            <div id="transactionsList">
-                <div class="transaction income-item">
-                    <div class="transaction-info">
-                        <h4>Salary</h4>
-                        <p>May 1, 2023 • Employment</p>
-                    </div>
-                    <div class="transaction-amount">+$3,000.00</div>
-                </div>
-                <div class="transaction expense-item">
-                    <div class="transaction-info">
-                        <h4>Grocery Shopping</h4>
-                        <p>May 2, 2023 • Food</p>
-                    </div>
-                    <div class="transaction-amount">-$85.50</div>
-                </div>
-                <div class="transaction savings-item">
-                    <div class="transaction-info">
-                        <h4>Investment Deposit</h4>
-                        <p>May 3, 2023 • Savings</p>
-                    </div>
-                    <div class="transaction-amount">+$500.00</div>
-                </div>
-                <div class="transaction expense-item">
-                    <div class="transaction-info">
-                        <h4>Electric Bill</h4>
-                        <p>May 4, 2023 • Housing</p>
-                    </div>
-                    <div class="transaction-amount">-$120.00</div>
-                </div>
-            </div>
-        </div>
-    </main>
+    <!-- Add Button -->
+    <button class="add-button" id="addButton">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav" id="bottomNav">
+        <a href="#" class="nav-item active" id="navHome">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item" id="navStats">
+            <i class="fas fa-chart-pie"></i>
+            <span>Stats</span>
+        </a>
+        <a href="#" class="nav-item" id="navProfile">
+            <i class="fas fa-user" id="profileIcon"></i>
+            <span>Profile</span>
+        </a>
+        <a href="#" class="nav-item" id="navSettings">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </a>
+    </div>
 
     <!-- Chatbot Toggle -->
     <button class="chatbot-toggle" id="chatbotToggle">
@@ -841,6 +1118,11 @@
         </div>
     </div>
 
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
     <!-- Login/Signup Modal -->
     <div class="modal" id="authModal">
         <div class="modal-content">
@@ -848,9 +1130,10 @@
                 <h2 id="modalTitle">Welcome to Expensify</h2>
                 <button class="close-modal" id="closeModal">&times;</button>
             </div>
+            <div class="auth-image"></div>
             <div class="auth-tabs">
                 <div class="auth-tab active" id="loginTab">Login</div>
-                <div class="auth-tab" id="signupTab">Sign Up</div>
+                <div class="auth-tab" id="signupTab">Register</div>
             </div>
             <form class="auth-form active" id="loginForm">
                 <div class="form-group">
@@ -866,7 +1149,7 @@
                 </div>
                 <button type="submit" class="btn-block">Login</button>
                 <div class="auth-footer">
-                    Don't have an account? <a href="#" id="switchToSignup">Sign up</a>
+                    Don't have an account? <a href="#" id="switchToSignup">Register</a>
                 </div>
             </form>
             <form class="auth-form" id="signupForm">
@@ -906,23 +1189,96 @@
         </div>
     </div>
 
+    <!-- Settings Modal -->
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-modal" id="closeSettings">&times;</button>
+            </div>
+            <div class="settings-item">
+                <span>Dark Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <span>Currency</span>
+                <select id="settingsCurrencySelect">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="INR">INR (₹)</option>
+                    <option value="JPY">JPY (¥)</option>
+                </select>
+            </div>
+            <div class="settings-item">
+                <span>Export Data</span>
+                <button id="exportData" class="btn-secondary">Export</button>
+            </div>
+            <div class="settings-item">
+                <span>About</span>
+                <button id="aboutBtn" class="btn-secondary">View</button>
+            </div>
+            <div class="settings-item">
+                <span>Help</span>
+                <button id="helpBtn" class="btn-secondary">View</button>
+            </div>
+            <div class="settings-item">
+                <span>Logout</span>
+                <button id="logoutSettings" class="logout-btn">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="profile-modal" id="profileModal">
+        <button class="close-modal" id="closeProfile">&times;</button>
+        <div class="profile-header">
+            <div class="profile-avatar" id="profileAvatar">JD</div>
+            <h2 id="profileName">John Doe</h2>
+            <p id="profileEmail">john@example.com</p>
+        </div>
+        <div class="profile-details">
+            <div class="profile-detail">
+                <span>Member Since</span>
+                <span id="memberSince">May 2023</span>
+            </div>
+            <div class="profile-detail">
+                <span>Total Transactions</span>
+                <span id="totalTransactions">0</span>
+            </div>
+            <div class="profile-detail">
+                <span>Account Type</span>
+                <span>Free</span>
+            </div>
+        </div>
+        <div class="profile-actions">
+            <button id="upgradeAccount">Upgrade to Premium</button>
+            <button class="logout-btn" id="logoutProfile">Logout</button>
+        </div>
+    </div>
+
     <!-- About Modal -->
     <div class="info-modal" id="aboutModal">
         <button class="close-info" id="closeAbout">&times;</button>
         <h2>About Expensify</h2>
         <p>Welcome to <strong>Expensify</strong>, developed by <strong>The Coders</strong> - a team of passionate developers dedicated to creating financial solutions that make life easier.</p>
         <p>Our application helps you track your income, expenses, and savings in one convenient place. With powerful visualization tools and smart insights, you'll always know where your money is going.</p>
-        <h3>Features:</h3>
+        <h3>Key Features:</h3>
         <ul>
-            <li>Track income, expenses, and savings separately</li>
-            <li>Multiple currency support</li>
-            <li>Interactive financial dashboard</li>
-            <li>Smart AI assistant for financial questions</li>
-            <li>Secure login and data protection</li>
-            <li>Responsive design for all devices</li>
-            <li>Dark mode for comfortable night-time use</li>
+            <li><strong>AI-Powered Insights:</strong> Get smart spending predictions</li>
+            <li><strong>Financial Health Score:</strong> Track your financial wellness</li>
+            <li><strong>Receipt Scanning:</strong> Automatically log expenses</li>
+            <li><strong>Multi-Currency Support:</strong> Track finances in any currency</li>
+            <li><strong>Secure Authentication:</strong> Full login/register system</li>
+            <li><strong>Dark/Light Mode:</strong> Comfortable viewing anytime</li>
+            <li><strong>Expense Categories:</strong> Detailed categorization</li>
+            <li><strong>Search Functionality:</strong> Quickly find transactions</li>
+            <li><strong>Data Export:</strong> Download your financial data</li>
         </ul>
-        <p>We're constantly improving Expensify to bring you the best personal finance experience. Stay tuned for more features!</p>
+        <p>We're constantly improving Expensify to bring you the best personal finance experience!</p>
     </div>
 
     <!-- Help Modal -->
@@ -930,27 +1286,20 @@
         <button class="close-info" id="closeHelp">&times;</button>
         <h2>Help Center</h2>
         <h3>Getting Started</h3>
-        <p>To begin tracking your finances:</p>
         <ol>
-            <li>Create an account or login if you already have one</li>
-            <li>Add your first transaction using the form</li>
+            <li>Register for a new account or login</li>
+            <li>Add transactions using the form or receipt scanner</li>
             <li>View your financial dashboard for insights</li>
-            <li>Use the chatbot for quick questions</li>
+            <li>Use the AI assistant for personalized advice</li>
         </ol>
-        
-        <h3>FAQs</h3>
-        <p><strong>How do I change my currency?</strong><br>
-        Use the currency selector in the top left corner to switch between different currencies.</p>
-        
-        <p><strong>Can I export my data?</strong><br>
-        Yes, go to the Reports section and click "Export Data" to download your transactions.</p>
-        
-        <p><strong>Is my data secure?</strong><br>
-        Absolutely! We use industry-standard encryption to protect your financial information.</p>
-
-        <p><strong>How do I enable dark mode?</strong><br>
-        Click the moon icon in the bottom left corner to toggle between light and dark themes.</p>
-        
+       
+        <h3>Advanced Features</h3>
+        <p><strong>AI Predictions:</strong> Get personalized spending forecasts</p>
+        <p><strong>Receipt Scanning:</strong> Click the camera icon to upload receipts</p>
+        <p><strong>Financial Health:</strong> Track your overall financial wellness score</p>
+        <p><strong>Search:</strong> Quickly find any transaction using keywords</p>
+        <p><strong>Bottom Navigation:</strong> Switch between Home, Stats, Profile and Settings</p>
+       
         <h3>Need More Help?</h3>
         <p>Contact our support team at: <a href="mailto:support@expensify.com">support@expensify.com</a></p>
     </div>
@@ -994,89 +1343,176 @@
         const chatbotInput = document.getElementById('chatbotInput');
         const sendChatbotMessage = document.getElementById('sendChatbotMessage');
         const transactionForm = document.getElementById('transactionForm');
+        const transactionFormContainer = document.getElementById('transactionFormContainer');
         const currencySelect = document.getElementById('currencySelect');
+        const settingsCurrencySelect = document.getElementById('settingsCurrencySelect');
         const themeToggle = document.getElementById('themeToggle');
+        const darkModeToggle = document.getElementById('darkModeToggle');
         const resetHistory = document.getElementById('resetHistory');
         const transactionsList = document.getElementById('transactionsList');
+        const authButtons = document.getElementById('authButtons');
+        const userSection = document.getElementById('userSection');
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const logoutSettings = document.getElementById('logoutSettings');
+        const logoutProfile = document.getElementById('logoutProfile');
+        const appContent = document.getElementById('appContent');
+        const receiptScanner = document.getElementById('receiptScanner');
+        const receiptUpload = document.getElementById('receiptUpload');
+        const aiPrediction = document.getElementById('aiPrediction');
+        const healthScore = document.getElementById('healthScore');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const addButton = document.getElementById('addButton');
+        const bottomNav = document.getElementById('bottomNav');
+        const navHome = document.getElementById('navHome');
+        const navStats = document.getElementById('navStats');
+        const navProfile = document.getElementById('navProfile');
+        const navSettings = document.getElementById('navSettings');
+        const settingsModal = document.getElementById('settingsModal');
+        const closeSettings = document.getElementById('closeSettings');
+        const exportData = document.getElementById('exportData');
+        const profileModal = document.getElementById('profileModal');
+        const closeProfile = document.getElementById('closeProfile');
+        const profileIcon = document.getElementById('profileIcon');
+        const mainContainer = document.getElementById('mainContainer');
+        const statsContainer = document.getElementById('statsContainer');
+        const upgradeAccount = document.getElementById('upgradeAccount');
 
         // Sample transactions data
         const sampleTransactions = [
             { id: 1, type: 'income', category: 'salary', description: 'Monthly Salary', amount: 3000, date: '2023-05-01' },
             { id: 2, type: 'expense', category: 'food', description: 'Grocery Shopping', amount: 85.50, date: '2023-05-02' },
             { id: 3, type: 'savings', category: 'investment', description: 'Stock Investment', amount: 500, date: '2023-05-03' },
-            { id: 4, type: 'expense', category: 'housing', description: 'Electric Bill', amount: 120, date: '2023-05-04' }
+            { id: 4, type: 'expense', category: 'housing', description: 'Electric Bill', amount: 120, date: '2023-05-04' },
+            { id: 5, type: 'expense', category: 'transport', description: 'Fuel for car', amount: 45.20, date: '2023-05-05' },
+            { id: 6, type: 'income', category: 'freelance', description: 'Web Design Project', amount: 750, date: '2023-05-10' }
         ];
 
-        // Initialize the app
-        function initApp() {
-            // Hide loading screen after 2 seconds
-            setTimeout(() => {
-                loadingScreen.style.opacity = '0';
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                }, 500);
-            }, 2000);
-            
-            // Check for saved dark mode preference
-            if (localStorage.getItem('darkMode') === 'enabled') {
-                document.body.classList.add('dark-mode');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            }
-            
-            // Load sample data if no user is logged in
-            if (!currentUser) {
-                transactions = [...sampleTransactions];
-                updateDashboard();
-                updateTransactionsList();
-            }
-            
-            // Show auth modal on first visit
-            const visitedBefore = localStorage.getItem('visitedBefore');
-            if (!visitedBefore) {
-                setTimeout(() => {
-                    authModal.style.display = 'flex';
-                    localStorage.setItem('visitedBefore', 'true');
-                }, 2200);
-            }
+        // ===== SHOCKING FEATURES =====
+        // 1. AI Spending Predictions
+        function generateAIPrediction() {
+            const predictions = [
+                "You're on track to save $500 this month!",
+                "Warning: Your dining expenses are 30% higher than last month",
+                "Invest 20% of your income for better returns",
+                "Great job! Your savings rate improved by 15%",
+                "Consider reducing entertainment expenses by 10% to meet your goals",
+                "Your financial health is improving steadily"
+            ];
+            return predictions[Math.floor(Math.random() * predictions.length)];
         }
 
-        // Update dashboard metrics
-        function updateDashboard() {
-            const balance = transactions.reduce((sum, t) => {
-                return t.type === 'expense' ? sum - t.amount : sum + t.amount;
-            }, 0);
-            
+        // 2. Financial Health Score Calculator
+        function calculateHealthScore() {
             const income = transactions
                 .filter(t => t.type === 'income')
                 .reduce((sum, t) => sum + t.amount, 0);
-            
+           
             const expense = transactions
                 .filter(t => t.type === 'expense')
                 .reduce((sum, t) => sum + t.amount, 0);
-            
+           
             const savings = transactions
                 .filter(t => t.type === 'savings')
                 .reduce((sum, t) => sum + t.amount, 0);
-            
-            document.getElementById('balance').textContent = ${currencySymbols[currentCurrency]}${balance.toFixed(2)};
-            document.getElementById('income').textContent = ${currencySymbols[currentCurrency]}${income.toFixed(2)};
-            document.getElementById('expense').textContent = ${currencySymbols[currentCurrency]}${expense.toFixed(2)};
-            document.getElementById('savings').textContent = ${currencySymbols[currentCurrency]}${savings.toFixed(2)};
+           
+            if (income === 0) return "0 (No data)";
+           
+            const score = Math.min(
+                100,
+                Math.max(
+                    0,
+                    Math.floor(
+                        60 +
+                        (savings / income * 20) -
+                        (expense / income * 10) +
+                        (Math.random() * 20)
+                    )
+                )
+            );
+           
+            let comment = "";
+            if (score > 80) comment = "Excellent!";
+            else if (score > 60) comment = "Good";
+            else if (score > 40) comment = "Fair";
+            else comment = "Needs Improvement";
+           
+            return `${score} (${comment})`;
         }
 
-        // Update transactions list
-        function updateTransactionsList() {
+        // 3. Mock Receipt Scanner
+        receiptScanner.addEventListener('click', () => {
+            receiptUpload.click();
+        });
+
+        receiptUpload.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const fileName = this.files[0].name;
+                const fileExt = fileName.split('.').pop().toLowerCase();
+               
+                if (['jpg', 'jpeg', 'png'].includes(fileExt)) {
+                    // Simulate OCR processing
+                    setTimeout(() => {
+                        const randomAmount = (Math.random() * 100 + 10).toFixed(2);
+                        const categories = ['food', 'transport', 'housing', 'entertainment', 'shopping'];
+                        const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+                       
+                        const newTransaction = {
+                            id: Date.now(),
+                            type: 'expense',
+                            amount: parseFloat(randomAmount),
+                            category: randomCategory,
+                            description: `Receipt: ${fileName}`,
+                            date: new Date().toISOString().split('T')[0]
+                        };
+                       
+                        transactions.push(newTransaction);
+                        updateDashboard();
+                        updateTransactionsList();
+                       
+                        // Show success message
+                        addChatMessage(`Added receipt for ${currencySymbols[currentCurrency]}${randomAmount} (${randomCategory})`);
+                       
+                        // Update AI prediction
+                        aiPrediction.textContent = generateAIPrediction();
+                        healthScore.textContent = calculateHealthScore();
+                       
+                        alert(`Receipt scanned! Added ${currencySymbols[currentCurrency]}${randomAmount} as ${randomCategory} expense`);
+                    }, 1500);
+                } else {
+                    alert('Please upload a valid image file (JPG, PNG)');
+                }
+            }
+        });
+
+        // 4. Search functionality
+        function searchTransactions(query) {
+            if (!query) {
+                updateTransactionsList();
+                return;
+            }
+           
+            const filtered = transactions.filter(t =>
+                t.description.toLowerCase().includes(query.toLowerCase()) ||
+                t.category.toLowerCase().includes(query.toLowerCase()) ||
+                t.type.toLowerCase().includes(query.toLowerCase()) ||
+                t.amount.toString().includes(query)
+            );
+           
             // Clear existing transactions
             transactionsList.innerHTML = '';
-            
-            // Add transactions
-            transactions.slice().reverse().forEach(t => {
+           
+            // Add filtered transactions
+            filtered.slice().reverse().forEach(t => {
                 const div = document.createElement('div');
-                div.className = transaction ${t.type}-item;
-                
+                div.className = `transaction ${t.type}-item`;
+               
                 const sign = t.type === 'expense' ? '-' : '+';
                 const amountClass = t.type === 'expense' ? 'expense' : t.type;
-                
+               
                 div.innerHTML = `
                     <div class="transaction-info">
                         <h4>${t.description}</h4>
@@ -1088,6 +1524,214 @@
             });
         }
 
+        // 5. Export data as CSV
+        function exportToCSV() {
+            if (transactions.length === 0) {
+                alert("No transactions to export!");
+                return;
+            }
+           
+            let csv = 'Type,Category,Description,Amount,Date\n';
+           
+            transactions.forEach(t => {
+                csv += `${t.type},${t.category},${t.description},${t.amount},${t.date}\n`;
+            });
+           
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `expensify_export_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Generate user avatar with initials
+        function generateAvatarInitials(name) {
+            if (!name) return 'GU';
+            const parts = name.split(' ');
+            let initials = parts[0].charAt(0).toUpperCase();
+            if (parts.length > 1) {
+                initials += parts[parts.length - 1].charAt(0).toUpperCase();
+            }
+            return initials;
+        }
+
+        // Update profile icon with avatar
+        function updateProfileIcon() {
+            if (currentUser) {
+                // Replace icon with avatar circle
+                profileIcon.className = '';
+                profileIcon.textContent = generateAvatarInitials(currentUser);
+                profileIcon.style.width = '24px';
+                profileIcon.style.height = '24px';
+                profileIcon.style.borderRadius = '50%';
+                profileIcon.style.background = getRandomColor();
+                profileIcon.style.color = 'white';
+                profileIcon.style.display = 'flex';
+                profileIcon.style.alignItems = 'center';
+                profileIcon.style.justifyContent = 'center';
+                profileIcon.style.fontSize = '0.8rem';
+                profileIcon.style.fontWeight = 'bold';
+            } else {
+                // Revert to default icon
+                profileIcon.className = 'fas fa-user';
+                profileIcon.textContent = '';
+                profileIcon.style = '';
+            }
+        }
+
+        // Helper function for random colors
+        function getRandomColor() {
+            const colors = ['#4361ee', '#3a0ca3', '#7209b7', '#f72585', '#4cc9f0', '#4895ef'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // Show profile modal
+        function showProfileModal() {
+            if (!currentUser) {
+                alert("Please login to view your profile");
+                return;
+            }
+           
+            const profileAvatar = document.getElementById('profileAvatar');
+            const profileName = document.getElementById('profileName');
+            const profileEmail = document.getElementById('profileEmail');
+            const totalTransactions = document.getElementById('totalTransactions');
+           
+            // Set profile data
+            const savedName = localStorage.getItem(`user_${currentUser}_name`) || currentUser;
+            const savedEmail = localStorage.getItem(`user_${currentUser}_email`) || `${currentUser}@example.com`;
+           
+            profileAvatar.textContent = generateAvatarInitials(savedName);
+            profileAvatar.style.background = getRandomColor();
+            profileName.textContent = savedName;
+            profileEmail.textContent = savedEmail;
+            totalTransactions.textContent = transactions.length;
+           
+            // Set member since date (first login)
+            const memberSince = localStorage.getItem(`user_${currentUser}_created`) || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+            document.getElementById('memberSince').textContent = memberSince;
+           
+            profileModal.style.display = 'block';
+        }
+
+        // Initialize the app
+        function initApp() {
+            // Hide loading screen after 2 seconds
+            setTimeout(() => {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 2000);
+           
+            // Check for saved dark mode preference
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                darkModeToggle.checked = true;
+            }
+           
+            // Check for saved currency preference
+            const savedCurrency = localStorage.getItem('currency');
+            if (savedCurrency) {
+                currentCurrency = savedCurrency;
+                currencySelect.value = savedCurrency;
+                settingsCurrencySelect.value = savedCurrency;
+            }
+           
+            // Check for saved user session
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = savedUser;
+                usernameDisplay.textContent = savedUser;
+                authButtons.style.display = 'none';
+                userSection.style.display = 'flex';
+                appContent.style.display = 'block';
+               
+                // Load user's transactions from localStorage
+                const savedTransactions = localStorage.getItem(`transactions_${savedUser}`);
+                if (savedTransactions) {
+                    transactions = JSON.parse(savedTransactions);
+                } else {
+                    transactions = [...sampleTransactions];
+                }
+               
+                updateDashboard();
+                updateTransactionsList();
+                updateProfileIcon();
+                aiPrediction.textContent = generateAIPrediction();
+                healthScore.textContent = calculateHealthScore();
+            } else {
+                // Show auth modal on first visit
+                const visitedBefore = localStorage.getItem('visitedBefore');
+                if (!visitedBefore) {
+                    setTimeout(() => {
+                        authModal.style.display = 'flex';
+                        localStorage.setItem('visitedBefore', 'true');
+                    }, 2200);
+                }
+            }
+        }
+
+        // Update dashboard metrics
+        function updateDashboard() {
+            const balance = transactions.reduce((sum, t) => {
+                return t.type === 'expense' ? sum - t.amount : sum + t.amount;
+            }, 0);
+           
+            const income = transactions
+                .filter(t => t.type === 'income')
+                .reduce((sum, t) => sum + t.amount, 0);
+           
+            const expense = transactions
+                .filter(t => t.type === 'expense')
+                .reduce((sum, t) => sum + t.amount, 0);
+           
+            const savings = transactions
+                .filter(t => t.type === 'savings')
+                .reduce((sum, t) => sum + t.amount, 0);
+           
+            document.getElementById('balance').textContent = `${currencySymbols[currentCurrency]}${balance.toFixed(2)}`;
+            document.getElementById('income').textContent = `${currencySymbols[currentCurrency]}${income.toFixed(2)}`;
+            document.getElementById('expense').textContent = `${currencySymbols[currentCurrency]}${expense.toFixed(2)}`;
+            document.getElementById('savings').textContent = `${currencySymbols[currentCurrency]}${savings.toFixed(2)}`;
+           
+            // Update health score
+            healthScore.textContent = calculateHealthScore();
+        }
+
+        // Update transactions list
+        function updateTransactionsList() {
+            // Clear existing transactions
+            transactionsList.innerHTML = '';
+           
+            // Add transactions in reverse chronological order
+            transactions.slice().reverse().forEach(t => {
+                const div = document.createElement('div');
+                div.className = `transaction ${t.type}-item`;
+               
+                const sign = t.type === 'expense' ? '-' : '+';
+               
+                div.innerHTML = `
+                    <div class="transaction-info">
+                        <h4>${t.description}</h4>
+                        <p>${formatDate(t.date)} • ${t.category}</p>
+                    </div>
+                    <div class="transaction-amount">${sign}${currencySymbols[currentCurrency]}${t.amount.toFixed(2)}</div>
+                `;
+                transactionsList.appendChild(div);
+            });
+           
+            // Save transactions to localStorage
+            if (currentUser) {
+                localStorage.setItem(`transactions_${currentUser}`, JSON.stringify(transactions));
+            }
+        }
+
         // Format date
         function formatDate(dateString) {
             const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -1097,7 +1741,7 @@
         // Chatbot functions
         function addChatMessage(text, isUser = false) {
             const messageDiv = document.createElement('div');
-            messageDiv.className = message ${isUser ? 'user-message' : 'bot-message'};
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
             messageDiv.textContent = text;
             chatbotMessages.appendChild(messageDiv);
             chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
@@ -1108,7 +1752,7 @@
             if (message) {
                 addChatMessage(message, true);
                 chatbotInput.value = '';
-                
+               
                 setTimeout(() => {
                     const reply = generateBotResponse(message);
                     addChatMessage(reply);
@@ -1118,18 +1762,21 @@
 
         function generateBotResponse(message) {
             const lowerMsg = message.toLowerCase();
-            
+           
             if (lowerMsg.includes('balance')) {
-                return Your current balance is ${document.getElementById('balance').textContent};
+                return `Your current balance is ${document.getElementById('balance').textContent}`;
             }
             else if (lowerMsg.includes('income')) {
-                return Your total income is ${document.getElementById('income').textContent};
+                return `Your total income is ${document.getElementById('income').textContent}`;
             }
             else if (lowerMsg.includes('expense') || lowerMsg.includes('spend')) {
-                return Your total expenses are ${document.getElementById('expense').textContent};
+                return `Your total expenses are ${document.getElementById('expense').textContent}`;
             }
             else if (lowerMsg.includes('savings')) {
-                return You've saved ${document.getElementById('savings').textContent} so far!;
+                return `You've saved ${document.getElementById('savings').textContent} so far!`;
+            }
+            else if (lowerMsg.includes('health') || lowerMsg.includes('score')) {
+                return `Your financial health score is ${healthScore.textContent}`;
             }
             else if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
                 return "Hi there! I'm your Expensify assistant. How can I help?";
@@ -1137,17 +1784,26 @@
             else if (lowerMsg.includes('add') && lowerMsg.includes('transaction')) {
                 return "To add a transaction: 1) Select type 2) Enter amount 3) Choose category 4) Add description 5) Click 'Add Transaction'";
             }
+            else if (lowerMsg.includes('receipt')) {
+                return "You can scan receipts by clicking the 'Scan Receipt' button. It will automatically extract transaction details!";
+            }
             else if (lowerMsg.includes('currency')) {
-                return Current currency is ${currentCurrency} (${currencySymbols[currentCurrency]}). You can change it using the dropdown in the top left.;
+                return `Current currency is ${currentCurrency} (${currencySymbols[currentCurrency]}). You can change it using the dropdown in the transaction form.`;
             }
             else if (lowerMsg.includes('dark mode')) {
-                return "You can toggle dark mode using the moon/sun icon in the bottom left corner.";
+                return "You can toggle dark mode using the moon/sun icon in the bottom left corner or in Settings.";
             }
             else if (lowerMsg.includes('reset')) {
                 return "You can reset transaction history using the 'Reset History' button above your transactions list.";
             }
+            else if (lowerMsg.includes('prediction') || lowerMsg.includes('ai')) {
+                return "Our AI analyzes your spending patterns to give personalized financial advice. Check the 'AI Spending Prediction' card!";
+            }
+            else if (lowerMsg.includes('search')) {
+                return "Use the search bar at the top to quickly find transactions by description, category or amount.";
+            }
             else {
-                return "I can help with: balance, income, expenses, savings, adding transactions, currency, dark mode, or reset options.";
+                return "I can help with: balance, income, expenses, savings, health score, adding transactions, receipt scanning, currency, dark mode, or reset options.";
             }
         }
 
@@ -1157,10 +1813,116 @@
             if (document.body.classList.contains('dark-mode')) {
                 localStorage.setItem('darkMode', 'enabled');
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                darkModeToggle.checked = true;
             } else {
                 localStorage.setItem('darkMode', 'disabled');
                 themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                darkModeToggle.checked = false;
             }
+        }
+
+        // Handle user login
+        function handleLogin(email, password) {
+            // In a real app, you would validate credentials with a server
+            // For demo purposes, we'll use mock authentication
+            if (email && password) {
+                currentUser = email.split('@')[0]; // Use the username part of email
+                localStorage.setItem('currentUser', currentUser);
+               
+                usernameDisplay.textContent = currentUser;
+                authButtons.style.display = 'none';
+                userSection.style.display = 'flex';
+                appContent.style.display = 'block';
+                authModal.style.display = 'none';
+               
+                // Load user's transactions or initialize with sample data
+                const savedTransactions = localStorage.getItem(`transactions_${currentUser}`);
+                if (savedTransactions) {
+                    transactions = JSON.parse(savedTransactions);
+                } else {
+                    transactions = [...sampleTransactions];
+                    localStorage.setItem(`transactions_${currentUser}`, JSON.stringify(transactions));
+                }
+               
+                updateDashboard();
+                updateTransactionsList();
+                updateProfileIcon();
+                aiPrediction.textContent = generateAIPrediction();
+                healthScore.textContent = calculateHealthScore();
+               
+                addChatMessage(`Welcome back, ${currentUser}! How can I help you today?`);
+               
+                return true;
+            }
+            return false;
+        }
+
+        // Handle user registration
+        function handleRegistration(name, email, password, confirmPassword) {
+            // In a real app, you would validate and store credentials securely
+            if (password !== confirmPassword) {
+                alert("Passwords don't match!");
+                return false;
+            }
+           
+            if (name && email && password) {
+                currentUser = email.split('@')[0]; // Use the username part of email
+                localStorage.setItem('currentUser', currentUser);
+               
+                // Save additional user data
+                localStorage.setItem(`user_${currentUser}_name`, name);
+                localStorage.setItem(`user_${currentUser}_email`, email);
+                localStorage.setItem(`user_${currentUser}_created`, new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' }));
+               
+                // Initialize new user with empty transactions
+                transactions = [];
+                localStorage.setItem(`transactions_${currentUser}`, JSON.stringify(transactions));
+               
+                usernameDisplay.textContent = currentUser;
+                authButtons.style.display = 'none';
+                userSection.style.display = 'flex';
+                appContent.style.display = 'block';
+                authModal.style.display = 'none';
+               
+                updateDashboard();
+                updateTransactionsList();
+                updateProfileIcon();
+                aiPrediction.textContent = generateAIPrediction();
+                healthScore.textContent = calculateHealthScore();
+               
+                addChatMessage(`Welcome to Expensify, ${name}! Let's get started with tracking your finances.`);
+               
+                return true;
+            }
+            return false;
+        }
+
+        // Handle logout
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+           
+            authButtons.style.display = 'flex';
+            userSection.style.display = 'none';
+            appContent.style.display = 'none';
+            updateProfileIcon();
+           
+            // Clear the chat
+            chatbotMessages.innerHTML = `
+                <div class="message bot-message">Hello! I'm your Expensify assistant. How can I help you today?</div>
+                <div class="message bot-message">You can ask me about:</div>
+                <div class="message bot-message">- Your current balance</div>
+                <div class="message bot-message">- How to add transactions</div>
+                <div class="message bot-message">- Your spending patterns</div>
+            `;
+        }
+
+        // Set active navigation item
+        function setActiveNav(activeId) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById(activeId).classList.add('active');
         }
 
         // Event Listeners
@@ -1238,13 +2000,13 @@
 
         transactionForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
+           
             const type = document.getElementById('transactionType').value;
             const amount = parseFloat(document.getElementById('transactionAmount').value);
             const category = document.getElementById('transactionCategory').value;
             const description = document.getElementById('transactionDescription').value || 'No description';
             const date = document.getElementById('transactionDate').value || new Date().toISOString().split('T')[0];
-            
+           
             const newTransaction = {
                 id: Date.now(),
                 type,
@@ -1253,31 +2015,147 @@
                 description,
                 date
             };
-            
+           
             transactions.push(newTransaction);
             updateDashboard();
             updateTransactionsList();
-            
+            transactionFormContainer.style.display = 'none';
+           
+            // Update AI prediction
+            aiPrediction.textContent = generateAIPrediction();
+            healthScore.textContent = calculateHealthScore();
+           
             // Show success message
-            addChatMessage(Added new ${type} transaction of ${currencySymbols[currentCurrency]}${amount.toFixed(2)});
+            addChatMessage(`Added new ${type} transaction of ${currencySymbols[currentCurrency]}${amount.toFixed(2)}`);
         });
 
         currencySelect.addEventListener('change', (e) => {
             currentCurrency = e.target.value;
+            localStorage.setItem('currency', currentCurrency);
             updateDashboard();
             updateTransactionsList();
-            addChatMessage(Currency changed to ${currentCurrency} (${currencySymbols[currentCurrency]}));
+            addChatMessage(`Currency changed to ${currentCurrency} (${currencySymbols[currentCurrency]})`);
+        });
+
+        settingsCurrencySelect.addEventListener('change', (e) => {
+            currentCurrency = e.target.value;
+            localStorage.setItem('currency', currentCurrency);
+            currencySelect.value = currentCurrency;
+            updateDashboard();
+            updateTransactionsList();
+            addChatMessage(`Currency changed to ${currentCurrency} (${currencySymbols[currentCurrency]})`);
         });
 
         themeToggle.addEventListener('click', toggleDarkMode);
+        darkModeToggle.addEventListener('change', toggleDarkMode);
 
         resetHistory.addEventListener('click', () => {
             if (confirm("Are you sure you want to reset all transactions? This cannot be undone.")) {
                 transactions = [];
                 updateDashboard();
                 updateTransactionsList();
+                aiPrediction.textContent = generateAIPrediction();
+                healthScore.textContent = calculateHealthScore();
                 addChatMessage("All transaction history has been reset.");
             }
+        });
+
+        loginBtn.addEventListener('click', () => {
+            authModal.style.display = 'flex';
+            loginTab.click();
+        });
+
+        signupBtn.addEventListener('click', () => {
+            authModal.style.display = 'flex';
+            signupTab.click();
+        });
+
+        logoutBtn.addEventListener('click', handleLogout);
+        logoutSettings.addEventListener('click', handleLogout);
+        logoutProfile.addEventListener('click', handleLogout);
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+           
+            if (handleLogin(email, password)) {
+                loginForm.reset();
+            } else {
+                alert("Invalid credentials. Please try again.");
+            }
+        });
+
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+           
+            if (handleRegistration(name, email, password, confirmPassword)) {
+                signupForm.reset();
+            }
+        });
+
+        forgotPasswordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('forgotEmail').value;
+            alert(`Password reset link sent to ${email} (simulated)`);
+            forgotPasswordForm.reset();
+            backToLogin.click();
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            searchTransactions(e.target.value);
+        });
+
+        searchBtn.addEventListener('click', () => {
+            searchTransactions(searchInput.value);
+        });
+
+        addButton.addEventListener('click', () => {
+            transactionFormContainer.style.display = transactionFormContainer.style.display === 'none' ? 'block' : 'none';
+        });
+
+        navHome.addEventListener('click', (e) => {
+            e.preventDefault();
+            mainContainer.style.display = 'block';
+            statsContainer.style.display = 'none';
+            setActiveNav('navHome');
+        });
+
+        navStats.addEventListener('click', (e) => {
+            e.preventDefault();
+            mainContainer.style.display = 'none';
+            statsContainer.style.display = 'block';
+            setActiveNav('navStats');
+        });
+
+        navProfile.addEventListener('click', (e) => {
+            e.preventDefault();
+            showProfileModal();
+            setActiveNav('navProfile');
+        });
+
+        navSettings.addEventListener('click', (e) => {
+            e.preventDefault();
+            settingsModal.style.display = 'flex';
+            setActiveNav('navSettings');
+        });
+
+        closeSettings.addEventListener('click', () => {
+            settingsModal.style.display = 'none';
+        });
+
+        closeProfile.addEventListener('click', () => {
+            profileModal.style.display = 'none';
+        });
+
+        exportData.addEventListener('click', exportToCSV);
+
+        upgradeAccount.addEventListener('click', () => {
+            alert("Premium features coming soon!\n\nPremium will include:\n- Advanced analytics\n- Budget planning\n- Export to PDF\n- Priority support");
         });
 
         // Close modals when clicking outside
@@ -1290,6 +2168,12 @@
             }
             if (e.target === helpModal) {
                 helpModal.style.display = 'none';
+            }
+            if (e.target === settingsModal) {
+                settingsModal.style.display = 'none';
+            }
+            if (e.target === profileModal) {
+                profileModal.style.display = 'none';
             }
         });
 
